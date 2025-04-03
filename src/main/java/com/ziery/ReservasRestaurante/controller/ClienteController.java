@@ -6,6 +6,7 @@ import com.ziery.ReservasRestaurante.entites.Cliente;
 import com.ziery.ReservasRestaurante.repository.ClienteRepository;
 import com.ziery.ReservasRestaurante.service.ClienteService;
 import jakarta.validation.Valid;
+import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -15,12 +16,10 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("/clientes")
+@RequiredArgsConstructor
 public class ClienteController {
 
-    public ClienteController (ClienteRepository clienteRepository, ClienteService clienteService) {
-        this.clienteRepository = clienteRepository;
-        this.clienteService = clienteService;
-    }
+
     public final ClienteRepository clienteRepository;
     public final ClienteService clienteService;
 

@@ -7,8 +7,6 @@ import com.ziery.ReservasRestaurante.repository.ClienteRepository;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
-import java.time.LocalDateTime;
-
 @Service
 @AllArgsConstructor
 public class ClienteService {
@@ -26,7 +24,7 @@ public class ClienteService {
 
 
     //método que mapeia de ClienteDto para Cliente
-    public Cliente mapearParaCliente(ClienteDto clienteDto) {
+    public  Cliente mapearParaCliente(ClienteDto clienteDto) {
         Cliente cliente = new Cliente();
         cliente.setNome(clienteDto.nome());
         cliente.setTelefone(clienteDto.telefone());
@@ -35,12 +33,11 @@ public class ClienteService {
     }
 
     //método que mapeia de  Cliente para ClienteDto
-    public static ClienteDto mapearParaClienteDto(Cliente cliente) {
+    public  ClienteDto mapearParaClienteDto(Cliente cliente) {
         return new ClienteDto(
                 cliente.getNome(),
                 cliente.getTelefone(),
-                cliente.getEmail(),
-                cliente.getDataCadastro()
+                cliente.getEmail()
 
         );
     }

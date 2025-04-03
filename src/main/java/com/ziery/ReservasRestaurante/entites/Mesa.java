@@ -1,10 +1,12 @@
 package com.ziery.ReservasRestaurante.entites;
 
 import jakarta.persistence.*;
+import lombok.Data;
 
 import java.util.List;
 
 @Entity
+@Data
 public class Mesa {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
