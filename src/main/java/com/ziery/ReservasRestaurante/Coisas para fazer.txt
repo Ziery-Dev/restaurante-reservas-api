@@ -1,0 +1,5 @@
+1- criar um dto somente para resposta ao cadastrar novo
+cliente, para que seja exibido a data de criação como
+resposta, sem que a dataCriação fique presente no dto de entrada
+
+2- melhorar o mapeamente de cliente para clienteDto e vice versa, atraves do mapStruct

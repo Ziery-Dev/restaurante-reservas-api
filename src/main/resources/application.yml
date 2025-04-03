@@ -1,0 +1,19 @@
+spring:
+    application:
+        name: ReservasRestaurante
+    datasource:
+        url: jdbc:postgresql://localhost:5432/reservas_restaurante
+        username: postgres
+        password: postgres
+        driver-class-name: org.postgresql.Driver
+
+    jpa:
+        hibernate:
+            ddl-auto: update # Dropa e recria o schema ao iniciar/encerrar.
+        show-sql: true # Mostra as consultas SQL no console.
+        properties:
+            hibernate:
+                format_sql: true # Formata as consultas SQL para facilitar a leitura.
+
+
+
