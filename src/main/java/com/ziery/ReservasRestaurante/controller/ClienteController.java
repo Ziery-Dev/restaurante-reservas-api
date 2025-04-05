@@ -38,5 +38,12 @@ public class ClienteController {
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<ClienteDtoRepostaSucesso> atualizarCliente(@PathVariable Long id, @RequestBody @Valid ClienteDto clienteDto) {
+        ClienteDtoRepostaSucesso resposta = clienteService.atualizar(clienteDto, id);
+        return ResponseEntity.status(HttpStatus.OK).body(resposta);
+
+    }
+
 
 }
