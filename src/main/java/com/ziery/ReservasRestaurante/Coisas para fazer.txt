@@ -2,4 +2,10 @@
 cliente, para que seja exibido a data de criação como
 resposta, sem que a dataCriação fique presente no dto de entrada
 
-2- melhorar o mapeamente de cliente para clienteDto e vice versa, atraves do mapStruct
+2- melhorar o mapeamente de cliente para clienteDto e vice versa, atraves do mapStruct (ou cria uma classe que faça isso)
+
+3 - tratar erros lançados de forma não global: quando insere o id do cliente para cadastrar nova reserva e esse id não é econtrado.
+
+4- exceção personalizada para quando fazer uma reserva na mesma mesa e mesmo horario de outra reserva
+
+5 - "encapsular o método de verificar a existencia de um id numa classe utilitaria"

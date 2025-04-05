@@ -9,10 +9,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequestMapping("/clientes")
@@ -27,6 +24,18 @@ public class ClienteController {
     public ResponseEntity<ClienteDtoRepostaSucesso> cadastrarCliente(@RequestBody  @Valid  ClienteDto clienteDto) {
         ClienteDtoRepostaSucesso resposta = clienteService.salvar(clienteDto); //manda o cliente para o service e recebe como retorna a resposta de sucesso
        return ResponseEntity.status(HttpStatus.CREATED).body(resposta); //retorna a resposta de sucesso se os dados estiverem corretos
+    }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<ClienteDto> buscarClientePorId(@PathVariable Long id) {
+         ClienteDto clienteDto = clienteService.buscarClientePorId(id);
+         return ResponseEntity.status(HttpStatus.OK).body(clienteDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> deletarCliente(@PathVariable Long id) {
+        clienteService.deletarClientePorId(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 
 

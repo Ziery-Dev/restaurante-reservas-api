@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @AllArgsConstructor
-@RequestMapping("/mesa")
+@RequestMapping("/mesas")
 public class MesaController {
 
     //Injeção via lombok
