@@ -47,6 +47,7 @@ public class ClienteService {
         cliente.setNome(clienteDto.nome());
         cliente.setEmail(clienteDto.email());
         cliente.setTelefone(clienteDto.telefone());
+        clienteRepository.save(cliente);
         ClienteDto clienteReponse = mapearParaClienteDto(cliente);
         return new ClienteDtoRepostaSucesso("Cliente atualizado com sucesso", clienteReponse);
     }

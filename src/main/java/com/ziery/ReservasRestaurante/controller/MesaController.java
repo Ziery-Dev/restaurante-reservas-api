@@ -7,10 +7,7 @@ import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 @RestController
 @AllArgsConstructor
@@ -26,4 +23,23 @@ public class MesaController {
         MesaDtoRepostaSucesso response = mesaService.salvar(mesaDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
+
+    @GetMapping("/{id}")
+    public ResponseEntity<MesaDto> buscarPorId(@PathVariable Long id) {
+        MesaDto mesaDto = mesaService.buscarPorId(id);
+        return ResponseEntity.status(HttpStatus.OK).body(mesaDto);
+    }
+
+    @DeleteMapping("/{id}")
+    public ResponseEntity<Void> excluirMesa(@PathVariable Long id) {
+        mesaService.excluirMesa(id);
+        return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
+    }
+
+    @PutMapping("/{id}")
+    public ResponseEntity<MesaDtoRepostaSucesso> atualizarMesa(@PathVariable Long id, @RequestBody @Valid MesaDto mesaDto) {
+       MesaDtoRepostaSucesso resposta =  mesaService.atualizarMesa(id, mesaDto);
+       return ResponseEntity.status(HttpStatus.OK).body(resposta);
+    }
+
 }

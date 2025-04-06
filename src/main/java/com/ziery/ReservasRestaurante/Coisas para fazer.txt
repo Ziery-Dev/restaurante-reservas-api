@@ -9,3 +9,7 @@ resposta, sem que a dataCriação fique presente no dto de entrada
 4- exceção personalizada para quando fazer uma reserva na mesma mesa e mesmo horario de outra reserva
 
 5 - "encapsular o método de verificar a existencia de um id numa classe utilitaria"
+
+6- Ao salvar, não permitir que um mesmo objeto com informações iguais seja guardado mais de um vez
+
+7 - aplicar a logica que verifica se já se existe uma chave estrangeira de um objeto a ser excluido em outra tabela.

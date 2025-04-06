@@ -32,4 +32,11 @@ public class GlobalExceptionHandler {
         erro.put("mensagem", ex.getMessage());
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
     }
+
+    @ExceptionHandler(ViolacaoDeIntegridadeException.class)
+    public ResponseEntity<Map<String, String>> tratamentoViolacaoDeIntegridade(ViolacaoDeIntegridadeException ex) {
+        Map<String, String> erro = new HashMap<>();
+        erro.put("mensagem", ex.getMessage());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
+    }
 }
