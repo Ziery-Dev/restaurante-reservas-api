@@ -1,20 +1,21 @@
 package com.ziery.ReservasRestaurante.service;
 
-import com.ziery.ReservasRestaurante.dtos.ClienteDto;
-import com.ziery.ReservasRestaurante.dtos.ClienteDtoRepostaSucesso;
+import com.ziery.ReservasRestaurante.dtos.request.ClienteDto;
+import com.ziery.ReservasRestaurante.dtos.response.ClienteDtoRepostaSucesso;
 import com.ziery.ReservasRestaurante.entites.Cliente;
-import com.ziery.ReservasRestaurante.exception.RecursoNaoEncontradoException;
+import com.ziery.ReservasRestaurante.exception.ViolacaoDeIntegridadeException;
 import com.ziery.ReservasRestaurante.repository.ClienteRepository;
+import com.ziery.ReservasRestaurante.repository.ReservaRepository;
+import com.ziery.ReservasRestaurante.utils.VerificadorEntidade;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
-import org.springframework.web.server.ResponseStatusException;
 
 @Service
 @AllArgsConstructor
 public class ClienteService {
 
     public final ClienteRepository clienteRepository;
+    public final ReservaRepository reservaRepository;
 
     //salvar cliente
     public ClienteDtoRepostaSucesso salvar(ClienteDto clienteDto) {
@@ -26,24 +27,24 @@ public class ClienteService {
     }
     //buscar cliente
     public ClienteDto buscarClientePorId(Long id) {
-        var cliente = clienteRepository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException( "Cliente com Id: "+ id + " não encontrado"));
+        var cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(id), id);
         return mapearParaClienteDto(cliente);
 
     }
 
     //deletar cliente
     public void deletarClientePorId(Long id) {
-        var cliente = clienteRepository.findById(id);
-        if(cliente.isEmpty()){
-            throw new RecursoNaoEncontradoException("Cliente com Id: "+ id + " não encontrado para ser deletado");
+       var cliente =  VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(id), id);
+        if (reservaRepository.existsByClienteId(cliente.getId())) {
+            throw new ViolacaoDeIntegridadeException("Cliente com Id " + id + " não pode ser deletado pois está vinculada a uma ou mais reservas");
         }
-        clienteRepository.deleteById(id);
+        clienteRepository.deleteById(cliente.getId());
 
     }
 
     //Atualizar cliente
     public ClienteDtoRepostaSucesso atualizar(ClienteDto clienteDto, Long id) {
-        var cliente = clienteRepository.findById(id).orElseThrow(() -> new RecursoNaoEncontradoException("Cliente com Id "+ id + " não encontrado"));
+        var cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(id), id);
         cliente.setNome(clienteDto.nome());
         cliente.setEmail(clienteDto.email());
         cliente.setTelefone(clienteDto.telefone());

@@ -1,7 +1,7 @@
 package com.ziery.ReservasRestaurante.controller;
 
-import com.ziery.ReservasRestaurante.dtos.MesaDto;
-import com.ziery.ReservasRestaurante.dtos.MesaDtoRepostaSucesso;
+import com.ziery.ReservasRestaurante.dtos.request.MesaDto;
+import com.ziery.ReservasRestaurante.dtos.response.MesaDtoRepostaSucesso;
 import com.ziery.ReservasRestaurante.service.MesaService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;

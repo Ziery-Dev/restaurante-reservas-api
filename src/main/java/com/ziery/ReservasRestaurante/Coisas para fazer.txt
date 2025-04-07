@@ -12,4 +12,12 @@ resposta, sem que a dataCriação fique presente no dto de entrada
 
 6- Ao salvar, não permitir que um mesmo objeto com informações iguais seja guardado mais de um vez
 
-7 - aplicar a logica que verifica se já se existe uma chave estrangeira de um objeto a ser excluido em outra tabela.
+7- adicionar ao post maping das classes a resposta da URI no header
+
+8 - criar uma classe auxiliar para lancar a exception violacaoDeIntegridade
+
+9- tratar a exceção que é lançada na classe service quando ao salvar, o id do cliente e/ou da mesa não é econtrado
+
+10 - garantir que o numero da mesa não foi cadastrado antes
+
+11 - garantir que a quantidade da reserva não seja maior que a capacidade da mesa

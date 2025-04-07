@@ -1,4 +1,4 @@
-package com.ziery.ReservasRestaurante.dtos;
+package com.ziery.ReservasRestaurante.dtos.request;
 
 import jakarta.validation.constraints.NotBlank;
 

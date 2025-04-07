@@ -1,8 +1,7 @@
 package com.ziery.ReservasRestaurante.controller;
 
-import com.ziery.ReservasRestaurante.dtos.ClienteDto;
-import com.ziery.ReservasRestaurante.dtos.ClienteDtoRepostaSucesso;
-import com.ziery.ReservasRestaurante.entites.Cliente;
+import com.ziery.ReservasRestaurante.dtos.request.ClienteDto;
+import com.ziery.ReservasRestaurante.dtos.response.ClienteDtoRepostaSucesso;
 import com.ziery.ReservasRestaurante.repository.ClienteRepository;
 import com.ziery.ReservasRestaurante.service.ClienteService;
 import jakarta.validation.Valid;
