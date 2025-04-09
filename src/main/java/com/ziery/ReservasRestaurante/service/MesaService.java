@@ -24,6 +24,9 @@ public class MesaService {
 
     //salvar mesa
     public MesaDtoRepostaSucesso salvar(@RequestBody MesaDto mesaDto) {
+        if (mesaRepository.existsByNumero(mesaDto.numero())){ //verifica se o número da mesa ja foi cadastrado
+            throw new ViolacaoDeIntegridadeException("O número: " +mesaDto.numero() + " inserido já foi cadastrado antes!");
+        }
         Mesa mesa = MesaMapper.toMesa(mesaDto);
         mesaRepository.save(mesa);
         MesaDto resposta = MesaMapper.toMesaDto(mesa);

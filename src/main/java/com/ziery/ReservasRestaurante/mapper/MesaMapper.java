@@ -9,7 +9,7 @@ public class MesaMapper {
 
     public static Mesa toMesa(MesaDto mesaDto) {
        Mesa mesa = new Mesa();
-        return setarValores(mesaDto, mesa); //chama o metodo de atualizar somente para setar os valores
+        return setarValoresMesa(mesaDto, mesa); //chama o metodo de atualizar somente para setar os valores
     }
 
     public static MesaDto toMesaDto(Mesa mesa) {
@@ -19,7 +19,7 @@ public class MesaMapper {
         );
     }
 
-    public static Mesa setarValores (MesaDto mesaDto, Mesa mesa) {
+    public static Mesa setarValoresMesa (MesaDto mesaDto, Mesa mesa) {
         mesa.setCapacidade(mesaDto.capacidade());
         mesa.setNumero(mesaDto.numero());
         return mesa;
