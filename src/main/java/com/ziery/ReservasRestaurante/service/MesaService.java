@@ -12,6 +12,8 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
+import java.util.Optional;
+
 @Service
 @AllArgsConstructor
 
@@ -24,9 +26,7 @@ public class MesaService {
 
     //salvar mesa
     public MesaDtoRepostaSucesso salvar(@RequestBody MesaDto mesaDto) {
-        if (mesaRepository.existsByNumero(mesaDto.numero())){ //verifica se o número da mesa ja foi cadastrado
-            throw new ViolacaoDeIntegridadeException("O número: " +mesaDto.numero() + " inserido já foi cadastrado antes!");
-        }
+        validaNumeroMesa(mesaDto.numero());
         Mesa mesa = MesaMapper.toMesa(mesaDto);
         mesaRepository.save(mesa);
         MesaDto resposta = MesaMapper.toMesaDto(mesa);
@@ -52,11 +52,26 @@ public class MesaService {
     //Atualizar mesa
     public MesaDtoRepostaSucesso atualizarMesa(Long id, MesaDto mesaDto) {
         var mesa = VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(id), id, "Mesa" );
+        validaNumeroMesaAtualizacao(mesaDto.numero(), mesa.getId());
         MesaMapper.setarValoresMesa(mesaDto, mesa); //seta os valores de mesaDto em mesa
         mesaRepository.save(mesa);
         MesaDto mesaReposta = MesaMapper.toMesaDto(mesa);
         return new MesaDtoRepostaSucesso("Mesa atualizada com sucesso ", mesaReposta);
 
+    }
+
+    //validação de numero de mesa duplicado ao salvar
+    public void validaNumeroMesa(int numero) {
+        if (mesaRepository.existsByNumero(numero)){ //verifica se o número da mesa ja foi cadastrado
+            throw new ViolacaoDeIntegridadeException("O número: " +numero + " inserido já foi cadastrado antes!");
+        }
+    }
+    //validação de numero de mesa duplicado ao atualizar
+    public void validaNumeroMesaAtualizacao(int numero, long idAtual) {
+        Optional<Mesa> mesaExistente = mesaRepository.findByNumero(numero);
+        if (mesaExistente.isPresent() && !mesaExistente.get().getId().equals(idAtual)){ //verifica se o número da mesa ja foi cadastrado
+            throw new ViolacaoDeIntegridadeException("O número: " + numero + " Já está sendo usada por outra mesa!");
+        }
     }
 
 

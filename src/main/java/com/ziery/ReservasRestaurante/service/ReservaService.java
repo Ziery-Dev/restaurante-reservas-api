@@ -5,6 +5,7 @@ import com.ziery.ReservasRestaurante.dtos.response.ReservaRespostaSucesso;
 import com.ziery.ReservasRestaurante.entites.Cliente;
 import com.ziery.ReservasRestaurante.entites.Mesa;
 import com.ziery.ReservasRestaurante.entites.Reserva;
+import com.ziery.ReservasRestaurante.exception.ViolacaoDeIntegridadeException;
 import com.ziery.ReservasRestaurante.mapper.ReservaMapeamento;
 import com.ziery.ReservasRestaurante.repository.ClienteRepository;
 import com.ziery.ReservasRestaurante.repository.MesaRepository;
@@ -24,6 +25,7 @@ public class ReservaService {
     //método salvar
     public ReservaRespostaSucesso salvar(ReservaDto reservaDto){
         Mesa mesa = VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(reservaDto.idMesa()), reservaDto.idMesa(), "Mesa"); //verifica e existencia da mesa
+        verificarQuantidade(reservaDto.quantidadePessoas(), mesa.getCapacidade());
         Cliente cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(reservaDto.idCliente()), reservaDto.idCliente(), "Cliente"); //verifica a existencia do cliente
         Reserva reserva = ReservaMapeamento.toReserva(reservaDto, mesa, cliente); //mapeia de os dados do Dto para entidade
         reservaRepository.save(reserva);
@@ -47,10 +49,18 @@ public class ReservaService {
     public ReservaRespostaSucesso atualizarReserva(Long id, ReservaDto reservaDto){
         Reserva reserva = VerificadorEntidade.verificarOuLancarException(reservaRepository.findById(id), id, "Reserva");
         Mesa mesa = VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(reservaDto.idMesa()), reservaDto.idMesa(), "Mesa"); //verifica e existencia da mesa
+         verificarQuantidade(reservaDto.quantidadePessoas(), mesa.getCapacidade());
         Cliente cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(reservaDto.idCliente()), reservaDto.idCliente(), "Cliente"); //verifica a existencia do cliente
         Reserva reservaMapeada = ReservaMapeamento.setarValoresReserva(reservaDto, reserva, cliente, mesa);
         ReservaDto resposta = ReservaMapeamento.toReservaDto(reservaMapeada);
         return new ReservaRespostaSucesso("Reserva atualizada com sucesso", resposta );
+    }
+
+
+    public void verificarQuantidade(Long quantidade, int capacidade){
+        if (quantidade > capacidade){
+            throw new ViolacaoDeIntegridadeException("A quantidade de pessoas na reserva não pode ser maior que a capacidade da mesa. capacidade da mesa selecionada: "+ capacidade);
+        }
     }
 
 

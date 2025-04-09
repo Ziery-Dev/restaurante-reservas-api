@@ -10,6 +10,4 @@
 7- adicionar ao post maping das classes a resposta da URI no header
 
 
-
-
 11 - garantir que a quantidade da reserva não seja maior que a capacidade da mesa
