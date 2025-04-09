@@ -5,18 +5,13 @@ import com.ziery.ReservasRestaurante.dtos.request.ReservaDto;
 import com.ziery.ReservasRestaurante.entites.Cliente;
 import com.ziery.ReservasRestaurante.entites.Mesa;
 import com.ziery.ReservasRestaurante.entites.Reserva;
-import jakarta.persistence.EntityNotFoundException;
+
 //Essa classe auxilia no mapeamento Dto para Entidade e Entidade para Dto
 public class ReservaMapeamento {
 
     public static Reserva toReserva(ReservaDto reservaDto, Mesa mesa, Cliente cliente) {
         Reserva reserva = new Reserva();
-        reserva.setMesa(mesa);
-        reserva.setCliente(cliente);
-        reserva.setDataHora(reservaDto.dataHora());
-        reserva.setStatus(reservaDto.status());
-        reserva.setQuantidadePessoas(reservaDto.quantidadePessoas());
-        return reserva;
+        return setarValoresReserva(reservaDto, reserva, cliente, mesa); //chama o métod de atualizar somente para setar os valores
     }
 
     public static ReservaDto toReservaDto(Reserva reserva) {
@@ -30,11 +25,12 @@ public class ReservaMapeamento {
         );
     }
 
-    public static Reserva atualizarReserva (ReservaDto reservaDto, Reserva reserva, Cliente cliente, Mesa mesa) {
+    public static Reserva setarValoresReserva(ReservaDto reservaDto, Reserva reserva, Cliente cliente, Mesa mesa) {
         reserva.setMesa(mesa);
         reserva.setCliente(cliente);
         reserva.setDataHora(reservaDto.dataHora());
         reserva.setStatus(reservaDto.status());
+        reserva.setQuantidadePessoas(reservaDto.quantidadePessoas());
         return reserva;
     }
 

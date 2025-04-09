@@ -1,6 +1,5 @@
 package com.ziery.ReservasRestaurante.service;
 
-import com.ziery.ReservasRestaurante.dtos.request.MesaDto;
 import com.ziery.ReservasRestaurante.dtos.request.ReservaDto;
 import com.ziery.ReservasRestaurante.dtos.response.ReservaRespostaSucesso;
 import com.ziery.ReservasRestaurante.entites.Cliente;
@@ -11,7 +10,6 @@ import com.ziery.ReservasRestaurante.repository.ClienteRepository;
 import com.ziery.ReservasRestaurante.repository.MesaRepository;
 import com.ziery.ReservasRestaurante.repository.ReservaRepository;
 import com.ziery.ReservasRestaurante.utils.VerificadorEntidade;
-import jakarta.persistence.EntityNotFoundException;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -50,7 +48,7 @@ public class ReservaService {
         Reserva reserva = VerificadorEntidade.verificarOuLancarException(reservaRepository.findById(id), id, "Reserva");
         Mesa mesa = VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(reservaDto.idMesa()), reservaDto.idMesa(), "Mesa"); //verifica e existencia da mesa
         Cliente cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(reservaDto.idCliente()), reservaDto.idCliente(), "Cliente"); //verifica a existencia do cliente
-        Reserva reservaMapeada = ReservaMapeamento.atualizarReserva(reservaDto, reserva, cliente, mesa);
+        Reserva reservaMapeada = ReservaMapeamento.setarValoresReserva(reservaDto, reserva, cliente, mesa);
         ReservaDto resposta = ReservaMapeamento.toReservaDto(reservaMapeada);
         return new ReservaRespostaSucesso("Reserva atualizada com sucesso", resposta );
     }
