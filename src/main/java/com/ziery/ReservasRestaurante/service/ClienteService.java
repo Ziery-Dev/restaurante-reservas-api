@@ -46,7 +46,7 @@ public class ClienteService {
     //Atualizar cliente
     public ClienteDtoRepostaSucesso atualizar(ClienteDto clienteDto, Long id) {
         var cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(id), id, "Cliente");
-        ClienteMapeamento.atualizarCliente(clienteDto, cliente);
+        ClienteMapeamento.setarValoresCliente(clienteDto, cliente);
         clienteRepository.save(cliente);
         ClienteDto clienteReponse = ClienteMapeamento.toClienteDto(cliente);
         return new ClienteDtoRepostaSucesso("Cliente atualizado com sucesso", clienteReponse);

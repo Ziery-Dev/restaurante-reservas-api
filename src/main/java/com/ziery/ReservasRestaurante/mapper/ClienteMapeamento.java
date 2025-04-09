@@ -12,7 +12,7 @@ public class ClienteMapeamento {
 
     public static Cliente toCliente(ClienteDto clienteDto) {
        Cliente cliente = new Cliente();
-        return atualizarCliente(clienteDto, cliente); //chama o metodo de atualizar somente para setar os valores
+        return setarValoresCliente(clienteDto, cliente); //chama o metodo de atualizar somente para setar os valores
     }
 
     public static ClienteDto toClienteDto(Cliente cliente) {
