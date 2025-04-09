@@ -27,14 +27,14 @@ public class ClienteService {
     }
     //buscar cliente
     public ClienteDto buscarClientePorId(Long id) {
-        var cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(id), id);
+        var cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(id), id, "Cliente");
         return mapearParaClienteDto(cliente);
 
     }
 
     //deletar cliente
     public void deletarClientePorId(Long id) {
-       var cliente =  VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(id), id);
+       var cliente =  VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(id), id, "Cliente");
         if (reservaRepository.existsByClienteId(cliente.getId())) {
             throw new ViolacaoDeIntegridadeException("Cliente com Id " + id + " não pode ser deletado pois está vinculada a uma ou mais reservas");
         }
@@ -44,7 +44,7 @@ public class ClienteService {
 
     //Atualizar cliente
     public ClienteDtoRepostaSucesso atualizar(ClienteDto clienteDto, Long id) {
-        var cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(id), id);
+        var cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(id), id, "Cliente");
         cliente.setNome(clienteDto.nome());
         cliente.setEmail(clienteDto.email());
         cliente.setTelefone(clienteDto.telefone());

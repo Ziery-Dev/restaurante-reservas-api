@@ -6,6 +6,7 @@ import com.ziery.ReservasRestaurante.dtos.response.ReservaRespostaSucesso;
 import com.ziery.ReservasRestaurante.entites.Cliente;
 import com.ziery.ReservasRestaurante.entites.Mesa;
 import com.ziery.ReservasRestaurante.entites.Reserva;
+import com.ziery.ReservasRestaurante.mapper.ReservaMapeamento;
 import com.ziery.ReservasRestaurante.repository.ClienteRepository;
 import com.ziery.ReservasRestaurante.repository.MesaRepository;
 import com.ziery.ReservasRestaurante.repository.ReservaRepository;
@@ -24,68 +25,41 @@ public class ReservaService {
 
     //método salvar
     public ReservaRespostaSucesso salvar(ReservaDto reservaDto){
-        Reserva reserva = mapearParaReserva(reservaDto);
+        Mesa mesa = VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(reservaDto.idMesa()), reservaDto.idMesa(), "Mesa"); //verifica e existencia da mesa
+        Cliente cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(reservaDto.idCliente()), reservaDto.idCliente(), "Cliente"); //verifica a existencia do cliente
+        Reserva reserva = ReservaMapeamento.toReserva(reservaDto, mesa, cliente); //mapeia de os dados do Dto para entidade
         reservaRepository.save(reserva);
-        ReservaDto resposta = maperaReservaDto(reserva);
+        ReservaDto resposta = ReservaMapeamento.toReservaDto(reserva); //mapeia de entidade para dto
         return new ReservaRespostaSucesso( "Reserva salva com sucesso! ", resposta );
     }
 
     //Exibir reserva por id
     public ReservaDto buscarReservaId(Long id){
-        var reserva = VerificadorEntidade.verificarOuLancarException(reservaRepository.findById(id), id);
-        return maperaReservaDto(reserva);
+        var reserva = VerificadorEntidade.verificarOuLancarException(reservaRepository.findById(id), id, "Reserva");
+        return ReservaMapeamento.toReservaDto(reserva);
     }
 
     //excluir reserva por id
     public void deletarReserva(Long id){
-        var reserva = VerificadorEntidade.verificarOuLancarException(reservaRepository.findById(id), id);
+        var reserva = VerificadorEntidade.verificarOuLancarException(reservaRepository.findById(id), id, "Reserva");
         reservaRepository.delete(reserva);
     }
 
     //atualizar reserva
     public ReservaRespostaSucesso atualizarReserva(Long id, ReservaDto reservaDto){
-        var reserva = VerificadorEntidade.verificarOuLancarException(reservaRepository.findById(id), id);
-        reserva.setQuantidadePessoas(reservaDto.quantidadePessoas());
-        reserva.setStatus(reservaDto.status());
-        reserva.setDataHora(reservaDto.dataHora());
-        reserva.setCliente(clienteRepository.findById(reservaDto.idCliente()).orElseThrow( () -> new EntityNotFoundException("Cliente ID " + reservaDto.idCliente() +" não econtrado")));
-        reserva.setMesa( mesaRepository.findById(reservaDto.idMesa()).orElseThrow(() -> new EntityNotFoundException("Mesa ID " + reservaDto.idMesa() + " não econtrado")));
-        reservaRepository.save(reserva);
-        ReservaDto resposta = maperaReservaDto(reserva);
-        return new ReservaRespostaSucesso("Reserva atualizado com sucesso", resposta );
+        Reserva reserva = VerificadorEntidade.verificarOuLancarException(reservaRepository.findById(id), id, "Reserva");
+        Mesa mesa = VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(reservaDto.idMesa()), reservaDto.idMesa(), "Mesa"); //verifica e existencia da mesa
+        Cliente cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(reservaDto.idCliente()), reservaDto.idCliente(), "Cliente"); //verifica a existencia do cliente
+        Reserva reservaMapeada = ReservaMapeamento.atualizarReserva(reservaDto, reserva, cliente, mesa);
+        ReservaDto resposta = ReservaMapeamento.toReservaDto(reservaMapeada);
+        return new ReservaRespostaSucesso("Reserva atualizada com sucesso", resposta );
     }
 
 
-    //método que mapeia de reversaDto para mesa
-    public Reserva mapearParaReserva(ReservaDto reservaDto) {
-        Reserva reserva = new Reserva();
-
-        Mesa idMesa = mesaRepository.findById(reservaDto.idMesa()).orElseThrow(() -> new EntityNotFoundException("Mesa ID " + reservaDto.idMesa() + " não econtrado"));
-        reserva.setMesa(idMesa);
-
-        Cliente idCliente = clienteRepository.findById(reservaDto.idCliente()).orElseThrow(() -> new EntityNotFoundException("Cliente ID " + reservaDto.idCliente() +" não econtrado"));
-        reserva.setCliente(idCliente);
 
 
-       reserva.setDataHora(reservaDto.dataHora());
 
 
-        reserva.setStatus(reservaDto.status());
-        reserva.setQuantidadePessoas(reservaDto.quantidadePessoas());
-        return reserva;
-    }
-
-    //método que mapeia de reservaDto Para Reserva
-    public ReservaDto maperaReservaDto(Reserva reserva) {
-        return new ReservaDto(
-                reserva.getDataHora(),
-                reserva.getQuantidadePessoas(),
-                reserva.getStatus(),
-                reserva.getCliente().getId(),
-                reserva.getMesa().getId()
-
-        );
-    }
 
 
 }

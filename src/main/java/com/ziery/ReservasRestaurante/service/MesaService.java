@@ -32,14 +32,14 @@ public class MesaService {
     }
     //Exibir mesa por Id
     public MesaDto buscarPorId(Long id) {
-        var mesa =  VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(id), id);
+        var mesa =  VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(id), id, "");
         return mapearParaMesaDto(mesa);
 
     }
 
     //deletar mesa
     public void excluirMesa(Long id) {
-        var mesa =  VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(id), id);
+        var mesa =  VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(id), id, "Mesa");
 
         if (reservaRepository.existsByMesaId(mesa.getId())) {
             throw new ViolacaoDeIntegridadeException("Mesa com Id " + id + " não pode ser deletada pois está vinculada a uma ou mais reservas");
@@ -49,7 +49,7 @@ public class MesaService {
 
     //Atualizar mesa
     public MesaDtoRepostaSucesso atualizarMesa(Long id, MesaDto mesaDto) {
-        var mesa = VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(id), id);
+        var mesa = VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(id), id, "Mesa" );
         mesa.setNumero(mesaDto.numero());
         mesa.setCapacidade(mesaDto.capacidade());
         mesaRepository.save(mesa);
