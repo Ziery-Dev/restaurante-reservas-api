@@ -16,7 +16,6 @@ import org.springframework.web.bind.annotation.*;
 public class ClienteController {
 
 
-    public final ClienteRepository clienteRepository;
     public final ClienteService clienteService;
 
     @PostMapping

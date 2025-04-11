@@ -14,6 +14,10 @@ import com.ziery.ReservasRestaurante.utils.VerificadorEntidade;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.Duration;
+import java.util.ArrayList;
+import java.util.List;
+
 @Service
 @AllArgsConstructor
 public class ReservaService {
@@ -25,6 +29,7 @@ public class ReservaService {
     //método salvar
     public ReservaRespostaSucesso salvar(ReservaDto reservaDto){
         Mesa mesa = VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(reservaDto.idMesa()), reservaDto.idMesa(), "Mesa"); //verifica e existencia da mesa
+        vefirificaEntidadeJaCadastrada(reservaDto, null, "Mesa");
         verificarQuantidade(reservaDto.quantidadePessoas(), mesa.getCapacidade());
         Cliente cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(reservaDto.idCliente()), reservaDto.idCliente(), "Cliente"); //verifica a existencia do cliente
         Reserva reserva = ReservaMapeamento.toReserva(reservaDto, mesa, cliente); //mapeia de os dados do Dto para entidade
@@ -49,18 +54,51 @@ public class ReservaService {
     public ReservaRespostaSucesso atualizarReserva(Long id, ReservaDto reservaDto){
         Reserva reserva = VerificadorEntidade.verificarOuLancarException(reservaRepository.findById(id), id, "Reserva");
         Mesa mesa = VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(reservaDto.idMesa()), reservaDto.idMesa(), "Mesa"); //verifica e existencia da mesa
-         verificarQuantidade(reservaDto.quantidadePessoas(), mesa.getCapacidade());
+        vefirificaEntidadeJaCadastrada(reservaDto, id, "Cliente");
+        vefirificaEntidadeJaCadastrada(reservaDto, id, "Mesa");
+        verificarQuantidade(reservaDto.quantidadePessoas(), mesa.getCapacidade());
         Cliente cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(reservaDto.idCliente()), reservaDto.idCliente(), "Cliente"); //verifica a existencia do cliente
         Reserva reservaMapeada = ReservaMapeamento.setarValoresReserva(reservaDto, reserva, cliente, mesa);
         ReservaDto resposta = ReservaMapeamento.toReservaDto(reservaMapeada);
+        reservaRepository.save(reserva);
         return new ReservaRespostaSucesso("Reserva atualizada com sucesso", resposta );
     }
 
+
+    //Métodos auxiliares
 
     public void verificarQuantidade(Long quantidade, int capacidade){
         if (quantidade > capacidade){
             throw new ViolacaoDeIntegridadeException("A quantidade de pessoas na reserva não pode ser maior que a capacidade da mesa. capacidade da mesa selecionada: "+ capacidade);
         }
+    }
+
+
+
+
+    public void vefirificaEntidadeJaCadastrada (ReservaDto reservaDto, Long idReserva, String entidade){
+        List<Reserva> reservaExistente = new ArrayList<>();
+
+        if (entidade.equals("Cliente")){
+            reservaExistente = reservaRepository.findByClienteId(reservaDto.idCliente());
+        }
+        else if (entidade.equals("Mesa")){
+            reservaExistente = reservaRepository.findByMesaId(reservaDto.idMesa());
+        }
+        if (!reservaExistente.isEmpty()){
+            for (Reserva reserva : reservaExistente){
+                if (idReserva == null || !reserva.getId().equals(idReserva)){
+                    long diferencaEntreHoras = Math.abs(Duration.between(reserva.getDataHora(), reservaDto.dataHora()).toHours());
+                    if (diferencaEntreHoras < 2){
+                        throw new ViolacaoDeIntegridadeException("A reserva não pode ser feita por que o(a) " + entidade + "  já está em outra reserva num intervalo de 2 horas");
+                    }
+
+                }
+
+            }
+
+        }
+
     }
 
 

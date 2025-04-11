@@ -8,6 +8,9 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
+
+import java.net.URI;
 
 @RestController
 @AllArgsConstructor
@@ -21,6 +24,10 @@ public class MesaController {
     @PostMapping
     public ResponseEntity<MesaDtoRepostaSucesso> salvar(@RequestBody @Valid MesaDto mesaDto) {
         MesaDtoRepostaSucesso response = mesaService.salvar(mesaDto);
+        URI uri = ServletUriComponentsBuilder
+                .fromCurrentRequest().path("/id")
+                .buildAndExpand(response.resposta())
+                .toUri();
         return ResponseEntity.status(HttpStatus.CREATED).body(response);
     }
 

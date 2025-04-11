@@ -17,9 +17,11 @@ import java.util.List;
 public class Cliente {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    private long id;
+    private Long id;
     private String nome;
+    @Column(unique = true)
     private String telefone;
+    @Column(unique = true)
     private String email;
     @CreatedDate
     private LocalDateTime dataCadastro;
