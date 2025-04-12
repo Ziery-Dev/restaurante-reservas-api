@@ -1,7 +1,8 @@
 package com.ziery.ReservasRestaurante.service;
 
 import com.ziery.ReservasRestaurante.dtos.request.MesaDto;
-import com.ziery.ReservasRestaurante.dtos.response.MesaDtoRepostaSucesso;
+import com.ziery.ReservasRestaurante.dtos.response.MesaDtoReposta;
+import com.ziery.ReservasRestaurante.dtos.response.MesaRespostaComMensagem;
 import com.ziery.ReservasRestaurante.entites.Mesa;
 import com.ziery.ReservasRestaurante.exception.ViolacaoDeIntegridadeException;
 import com.ziery.ReservasRestaurante.mapper.MesaMapper;
@@ -11,9 +12,7 @@ import com.ziery.ReservasRestaurante.utils.VerificadorEntidade;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
-import java.net.URI;
 import java.util.Optional;
 
 @Service
@@ -27,16 +26,16 @@ public class MesaService {
 
 
     //salvar mesa
-    public MesaDtoRepostaSucesso salvar(@RequestBody MesaDto mesaDto) {
+    public MesaRespostaComMensagem salvar(@RequestBody MesaDto mesaDto) {
         validaNumeroMesa(mesaDto.numero());
         Mesa mesa = MesaMapper.toMesa(mesaDto);
         mesaRepository.save(mesa);
-        MesaDto resposta = MesaMapper.toMesaDto(mesa);
-        return new MesaDtoRepostaSucesso("Mesa salva com sucesso", resposta);
+        MesaDtoReposta resposta = MesaMapper.toMesaDto(mesa);
+        return new MesaRespostaComMensagem("Mesa salva com sucesso", resposta);
 
     }
     //Exibir mesa por Id
-    public MesaDto buscarPorId(Long id) {
+    public MesaDtoReposta buscarPorId(Long id) {
         var mesa =  VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(id), id, "Mesa");
         return MesaMapper.toMesaDto(mesa);
 
@@ -52,13 +51,13 @@ public class MesaService {
     }
 
     //Atualizar mesa
-    public MesaDtoRepostaSucesso atualizarMesa(Long id, MesaDto mesaDto) {
+    public MesaRespostaComMensagem atualizarMesa(Long id, MesaDto mesaDto) {
         var mesa = VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(id), id, "Mesa" );
         validaNumeroMesaAtualizacao(mesaDto.numero(), mesa.getId());
         MesaMapper.setarValoresMesa(mesaDto, mesa); //seta os valores de mesaDto em mesa
         mesaRepository.save(mesa);
-        MesaDto mesaReposta = MesaMapper.toMesaDto(mesa);
-        return new MesaDtoRepostaSucesso("Mesa atualizada com sucesso ", mesaReposta);
+        MesaDtoReposta mesaReposta = MesaMapper.toMesaDto(mesa);
+        return new MesaRespostaComMensagem("Mesa atualizada com sucesso ", mesaReposta);
 
     }
 

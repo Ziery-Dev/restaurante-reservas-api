@@ -2,15 +2,8 @@
 
 3 - tratar erros lançados de forma não global: quando insere o id do cliente para cadastrar nova reserva e esse id não é econtrado.
 
-
-
-6- Ao salvar, não permitir que um mesmo objeto com informações iguais seja guardado mais de um vez
-
 7- adicionar ao post maping das classes a resposta da URI no header
 
-8 - não permitir que seja feito a reserva de uma mesa que ja esta reserva, a menos que em horários diferentes
-
-9 - tratar o erro de repetição de uma informação anotada com @collum(unique = true)
 
 10 - tratar erro quando tenta excluir cliente ou mesa cadastrado a uma reserva
 

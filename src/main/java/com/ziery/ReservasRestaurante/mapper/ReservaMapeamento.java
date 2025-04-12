@@ -2,6 +2,7 @@ package com.ziery.ReservasRestaurante.mapper;
 
 
 import com.ziery.ReservasRestaurante.dtos.request.ReservaDto;
+import com.ziery.ReservasRestaurante.dtos.response.ReservaDtoResposta;
 import com.ziery.ReservasRestaurante.entites.Cliente;
 import com.ziery.ReservasRestaurante.entites.Mesa;
 import com.ziery.ReservasRestaurante.entites.Reserva;
@@ -14,8 +15,9 @@ public class ReservaMapeamento {
         return setarValoresReserva(reservaDto, reserva, cliente, mesa); //chama o métod de atualizar somente para setar os valores
     }
 
-    public static ReservaDto toReservaDto(Reserva reserva) {
-        return new ReservaDto(
+    public static ReservaDtoResposta toReservaDto(Reserva reserva) {
+        return new ReservaDtoResposta(
+                reserva.getId(),
                 reserva.getDataHora(),
                 reserva.getQuantidadePessoas(),
                 reserva.getStatus(),

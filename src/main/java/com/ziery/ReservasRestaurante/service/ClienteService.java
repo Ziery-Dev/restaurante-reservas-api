@@ -1,7 +1,8 @@
 package com.ziery.ReservasRestaurante.service;
 
 import com.ziery.ReservasRestaurante.dtos.request.ClienteDto;
-import com.ziery.ReservasRestaurante.dtos.response.ClienteDtoRepostaSucesso;
+import com.ziery.ReservasRestaurante.dtos.response.ClienteDtoReposta;
+import com.ziery.ReservasRestaurante.dtos.response.ClienteRespostaComMensagem;
 import com.ziery.ReservasRestaurante.entites.Cliente;
 import com.ziery.ReservasRestaurante.exception.ViolacaoDeIntegridadeException;
 import com.ziery.ReservasRestaurante.mapper.ClienteMapeamento;
@@ -21,18 +22,18 @@ public class ClienteService {
     public final ReservaRepository reservaRepository;
 
     //salvar cliente
-    public ClienteDtoRepostaSucesso salvar(ClienteDto clienteDto) {
+    public ClienteRespostaComMensagem salvar(ClienteDto clienteDto) {
         verificaTelefoneOuEmailSalvar(clienteDto.telefone(), clienteDto.email());
         Cliente cliente = ClienteMapeamento.toCliente(clienteDto); // mapeia o clienteDto que chegou como entrada para uma classe do tipo cliente, para que possa ser salvo no repositório
         clienteRepository.save(cliente); //salva o cliente no repositorio
-        ClienteDto clienteReponse = ClienteMapeamento.toClienteDto(cliente); //mapeia o cliente que foi salvo como Dto novamnete para ser mandado como resposta
-        return new ClienteDtoRepostaSucesso("Cliente salvo com sucesso", clienteReponse); //retorna a mensagem de sucesso junto com o dto para ser retornando no controller como resposta
+        ClienteDtoReposta clienteReponse = ClienteMapeamento.toClienteDtoResponse(cliente); //mapeia o cliente que foi salvo como Dto novamnete para ser mandado como resposta
+        return new ClienteRespostaComMensagem("Cliente salvo com sucesso", clienteReponse); //retorna a mensagem de sucesso junto com o dto para ser retornando no controller como resposta
 
     }
     //buscar cliente
-    public ClienteDto buscarClientePorId(Long id) {
+    public ClienteDtoReposta buscarClientePorId(Long id) {
         var cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(id), id, "Cliente");
-        return ClienteMapeamento.toClienteDto(cliente);
+        return ClienteMapeamento.toClienteDtoResponse(cliente);
 
     }
 
@@ -47,13 +48,13 @@ public class ClienteService {
     }
 
     //Atualizar cliente
-    public ClienteDtoRepostaSucesso atualizar(ClienteDto clienteDto, Long id) {
+    public ClienteRespostaComMensagem atualizar(ClienteDto clienteDto, Long id) {
         var cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(id), id, "Cliente");
         verificaTelefoneOuEmailAtualizar(id, clienteDto.telefone(), clienteDto.email());
         ClienteMapeamento.setarValoresCliente(clienteDto, cliente);
         clienteRepository.save(cliente);
-        ClienteDto clienteReponse = ClienteMapeamento.toClienteDto(cliente);
-        return new ClienteDtoRepostaSucesso("Cliente atualizado com sucesso", clienteReponse);
+        ClienteDtoReposta clienteReponse = ClienteMapeamento.toClienteDtoResponse(cliente);
+        return new ClienteRespostaComMensagem("Cliente atualizado com sucesso", clienteReponse);
     }
 
 

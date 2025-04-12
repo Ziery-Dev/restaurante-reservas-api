@@ -1,7 +1,9 @@
 package com.ziery.ReservasRestaurante.service;
 
+import com.ziery.ReservasRestaurante.controller.GenericController;
 import com.ziery.ReservasRestaurante.dtos.request.ReservaDto;
-import com.ziery.ReservasRestaurante.dtos.response.ReservaRespostaSucesso;
+import com.ziery.ReservasRestaurante.dtos.response.ReservaDtoResposta;
+import com.ziery.ReservasRestaurante.dtos.response.ReservaRepostaComMensagem;
 import com.ziery.ReservasRestaurante.entites.Cliente;
 import com.ziery.ReservasRestaurante.entites.Mesa;
 import com.ziery.ReservasRestaurante.entites.Reserva;
@@ -20,26 +22,26 @@ import java.util.List;
 
 @Service
 @AllArgsConstructor
-public class ReservaService {
+public class ReservaService  {
 
     private ReservaRepository reservaRepository;
     private MesaRepository mesaRepository;
     private ClienteRepository clienteRepository;
 
     //método salvar
-    public ReservaRespostaSucesso salvar(ReservaDto reservaDto){
+    public ReservaRepostaComMensagem salvar(ReservaDto reservaDto){
         Mesa mesa = VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(reservaDto.idMesa()), reservaDto.idMesa(), "Mesa"); //verifica e existencia da mesa
         vefirificaEntidadeJaCadastrada(reservaDto, null, "Mesa");
         verificarQuantidade(reservaDto.quantidadePessoas(), mesa.getCapacidade());
         Cliente cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(reservaDto.idCliente()), reservaDto.idCliente(), "Cliente"); //verifica a existencia do cliente
         Reserva reserva = ReservaMapeamento.toReserva(reservaDto, mesa, cliente); //mapeia de os dados do Dto para entidade
         reservaRepository.save(reserva);
-        ReservaDto resposta = ReservaMapeamento.toReservaDto(reserva); //mapeia de entidade para dto
-        return new ReservaRespostaSucesso( "Reserva salva com sucesso! ", resposta );
+        ReservaDtoResposta resposta = ReservaMapeamento.toReservaDto(reserva); //mapeia de entidade para dto
+        return new ReservaRepostaComMensagem( "Reserva salva com sucesso! ", resposta );
     }
 
     //Exibir reserva por id
-    public ReservaDto buscarReservaId(Long id){
+    public ReservaDtoResposta buscarReservaId(Long id){
         var reserva = VerificadorEntidade.verificarOuLancarException(reservaRepository.findById(id), id, "Reserva");
         return ReservaMapeamento.toReservaDto(reserva);
     }
@@ -51,7 +53,7 @@ public class ReservaService {
     }
 
     //atualizar reserva
-    public ReservaRespostaSucesso atualizarReserva(Long id, ReservaDto reservaDto){
+    public ReservaRepostaComMensagem atualizarReserva(Long id, ReservaDto reservaDto){
         Reserva reserva = VerificadorEntidade.verificarOuLancarException(reservaRepository.findById(id), id, "Reserva");
         Mesa mesa = VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(reservaDto.idMesa()), reservaDto.idMesa(), "Mesa"); //verifica e existencia da mesa
         vefirificaEntidadeJaCadastrada(reservaDto, id, "Cliente");
@@ -59,9 +61,9 @@ public class ReservaService {
         verificarQuantidade(reservaDto.quantidadePessoas(), mesa.getCapacidade());
         Cliente cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(reservaDto.idCliente()), reservaDto.idCliente(), "Cliente"); //verifica a existencia do cliente
         Reserva reservaMapeada = ReservaMapeamento.setarValoresReserva(reservaDto, reserva, cliente, mesa);
-        ReservaDto resposta = ReservaMapeamento.toReservaDto(reservaMapeada);
         reservaRepository.save(reserva);
-        return new ReservaRespostaSucesso("Reserva atualizada com sucesso", resposta );
+        ReservaDtoResposta resposta = ReservaMapeamento.toReservaDto(reservaMapeada);
+        return new ReservaRepostaComMensagem("Reserva atualizada com sucesso", resposta );
     }
 
 

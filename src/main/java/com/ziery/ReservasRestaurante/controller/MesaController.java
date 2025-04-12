@@ -1,7 +1,8 @@
 package com.ziery.ReservasRestaurante.controller;
 
 import com.ziery.ReservasRestaurante.dtos.request.MesaDto;
-import com.ziery.ReservasRestaurante.dtos.response.MesaDtoRepostaSucesso;
+import com.ziery.ReservasRestaurante.dtos.response.MesaDtoReposta;
+import com.ziery.ReservasRestaurante.dtos.response.MesaRespostaComMensagem;
 import com.ziery.ReservasRestaurante.service.MesaService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
@@ -15,26 +16,23 @@ import java.net.URI;
 @RestController
 @AllArgsConstructor
 @RequestMapping("/mesas")
-public class MesaController {
+public class MesaController implements GenericController {
 
     //Injeção via lombok
     private final MesaService mesaService;
 
 
     @PostMapping
-    public ResponseEntity<MesaDtoRepostaSucesso> salvar(@RequestBody @Valid MesaDto mesaDto) {
-        MesaDtoRepostaSucesso response = mesaService.salvar(mesaDto);
-        URI uri = ServletUriComponentsBuilder
-                .fromCurrentRequest().path("/id")
-                .buildAndExpand(response.resposta())
-                .toUri();
-        return ResponseEntity.status(HttpStatus.CREATED).body(response);
+    public ResponseEntity<MesaRespostaComMensagem> salvar(@RequestBody @Valid MesaDto mesaDto) {
+        MesaRespostaComMensagem response = mesaService.salvar(mesaDto);
+        URI uri = geraHeaderLocation(response.mesa().id());
+        return ResponseEntity.created(uri).body(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MesaDto> buscarPorId(@PathVariable Long id) {
-        MesaDto mesaDto = mesaService.buscarPorId(id);
-        return ResponseEntity.status(HttpStatus.OK).body(mesaDto);
+    public ResponseEntity<MesaDtoReposta> buscarPorId(@PathVariable Long id) {
+        MesaDtoReposta mesaDtoReposta = mesaService.buscarPorId(id);
+        return ResponseEntity.status(HttpStatus.OK).body(mesaDtoReposta);
     }
 
     @DeleteMapping("/{id}")
@@ -44,8 +42,8 @@ public class MesaController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<MesaDtoRepostaSucesso> atualizarMesa(@PathVariable Long id, @RequestBody @Valid MesaDto mesaDto) {
-       MesaDtoRepostaSucesso resposta =  mesaService.atualizarMesa(id, mesaDto);
+    public ResponseEntity<MesaRespostaComMensagem> atualizarMesa(@PathVariable Long id, @RequestBody @Valid MesaDto mesaDto) {
+       MesaRespostaComMensagem resposta =  mesaService.atualizarMesa(id, mesaDto);
        return ResponseEntity.status(HttpStatus.OK).body(resposta);
     }
 
