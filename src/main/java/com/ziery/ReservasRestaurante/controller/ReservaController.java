@@ -6,7 +6,6 @@ import com.ziery.ReservasRestaurante.dtos.response.ReservaRepostaComMensagem;
 import com.ziery.ReservasRestaurante.service.ReservaService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
-import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

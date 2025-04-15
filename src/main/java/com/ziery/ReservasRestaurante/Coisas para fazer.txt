@@ -1,11 +1,6 @@
 
 
-3 - tratar erros lançados de forma não global: quando insere o id do cliente para cadastrar nova reserva e esse id não é econtrado.
-
-7- adicionar ao post maping das classes a resposta da URI no header
-
-
-10 - tratar erro quando tenta excluir cliente ou mesa cadastrado a uma reserva
+1 - mapstruct
 
 11 - classe para cada entidade com os métodos auxiliares
 
