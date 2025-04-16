@@ -6,6 +6,7 @@ import com.ziery.ReservasRestaurante.dtos.response.MesaRespostaComMensagem;
 import com.ziery.ReservasRestaurante.entites.Mesa;
 import com.ziery.ReservasRestaurante.exception.ViolacaoDeIntegridadeException;
 import com.ziery.ReservasRestaurante.mapper.MesaMapeamento;
+import com.ziery.ReservasRestaurante.mapper.MesaMapper;
 import com.ziery.ReservasRestaurante.repository.MesaRepository;
 import com.ziery.ReservasRestaurante.repository.ReservaRepository;
 import com.ziery.ReservasRestaurante.utils.VerificadorEntidade;
@@ -22,22 +23,24 @@ public class MesaService {
 
     private final MesaRepository mesaRepository;
     private final ReservaRepository reservaRepository;
+    private final MesaMapper mesaMapper;
+
 
 
 
     //salvar mesa
     public MesaRespostaComMensagem salvar(@RequestBody MesaDto mesaDto) {
         validaNumeroMesa(mesaDto.numero());
-        Mesa mesa = MesaMapeamento.toMesa(mesaDto);
+        Mesa mesa = mesaMapper.toMesa(mesaDto);
         mesaRepository.save(mesa);
-        MesaDtoReposta resposta = MesaMapeamento.toMesaDto(mesa);
+        MesaDtoReposta resposta = mesaMapper.toMesaDtoResposta(mesa);
         return new MesaRespostaComMensagem("Mesa salva com sucesso", resposta);
 
     }
     //Exibir mesa por Id
     public MesaDtoReposta buscarPorId(Long id) {
         var mesa =  VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(id), id, "Mesa");
-        return MesaMapeamento.toMesaDto(mesa);
+        return mesaMapper.toMesaDtoResposta(mesa);
 
     }
 
@@ -54,9 +57,9 @@ public class MesaService {
     public MesaRespostaComMensagem atualizarMesa(Long id, MesaDto mesaDto) {
         var mesa = VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(id), id, "Mesa" );
         validaNumeroMesaAtualizacao(mesaDto.numero(), mesa.getId());
-        MesaMapeamento.setarValoresMesa(mesaDto, mesa); //seta os valores de mesaDto em mesa
+        mesaMapper.MesaSetValores(mesaDto, mesa);
         mesaRepository.save(mesa);
-        MesaDtoReposta mesaReposta = MesaMapeamento.toMesaDto(mesa);
+        MesaDtoReposta mesaReposta = mesaMapper.toMesaDtoResposta(mesa);
         return new MesaRespostaComMensagem("Mesa atualizada com sucesso ", mesaReposta);
 
     }
