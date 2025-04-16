@@ -6,7 +6,7 @@ import com.ziery.ReservasRestaurante.dtos.response.MesaDtoReposta;
 import com.ziery.ReservasRestaurante.entites.Mesa;
 
 //Essa classe auxilia no mapeamento Dto para Entidade e Entidade para Dto
-public class MesaMapper {
+public class MesaMapeamento {
 
     public static Mesa toMesa(MesaDto mesaDto) {
        Mesa mesa = new Mesa();

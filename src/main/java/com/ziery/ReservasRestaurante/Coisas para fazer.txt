@@ -1,7 +1,7 @@
 
 
-1 - mapstruct
+
 
 11 - classe para cada entidade com os métodos auxiliares
 
-
+15 - se um valor muito grande for digitado, na busca de uma cliente por id por exemplo, dá erro interno, corrigir isso depois
