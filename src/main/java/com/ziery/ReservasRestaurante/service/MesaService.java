@@ -5,7 +5,6 @@ import com.ziery.ReservasRestaurante.dtos.response.MesaDtoReposta;
 import com.ziery.ReservasRestaurante.dtos.response.MesaRespostaComMensagem;
 import com.ziery.ReservasRestaurante.entites.Mesa;
 import com.ziery.ReservasRestaurante.exception.ViolacaoDeIntegridadeException;
-import com.ziery.ReservasRestaurante.mapper.MesaMapeamento;
 import com.ziery.ReservasRestaurante.mapper.MesaMapper;
 import com.ziery.ReservasRestaurante.repository.MesaRepository;
 import com.ziery.ReservasRestaurante.repository.ReservaRepository;

@@ -18,7 +18,12 @@ public class Mesa {
     @OneToMany(mappedBy = "mesa")
     private List<Reserva> reservas;
 
-
-
-
+    @Override
+    public String toString() {
+        return "Mesa{" +
+                "id=" + id +
+                ", numero=" + numero +
+                ", capacidade=" + capacidade +
+                '}';
+    }
 }

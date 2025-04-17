@@ -10,10 +10,10 @@ spring:
     jpa:
         hibernate:
             ddl-auto: update # Dropa e recria o schema ao iniciar/encerrar.
-        show-sql: true # Mostra as consultas SQL no console.
-        properties:
-            hibernate:
-                format_sql: true # Formata as consultas SQL para facilitar a leitura.
+#        show-sql: true # Mostra as consultas SQL no console.
+#        properties:
+#            hibernate:
+#                format_sql: true # Formata as consultas SQL para facilitar a leitura.
 
 
 
