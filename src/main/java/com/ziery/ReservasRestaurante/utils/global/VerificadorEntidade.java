@@ -1,6 +1,5 @@
-package com.ziery.ReservasRestaurante.utils;
+package com.ziery.ReservasRestaurante.utils.global;
 
-import com.ziery.ReservasRestaurante.exception.ErroResposta;
 import com.ziery.ReservasRestaurante.exception.RecursoNaoEncontradoException;
 
 import java.util.Optional;

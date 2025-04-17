@@ -28,6 +28,8 @@ public interface ReservaMapper {
     // Atualiza uma entidade Reserva com os valores do DTO (sem perder referência)
         @Mapping(target = "cliente", ignore = true)
         @Mapping(target = "mesa", ignore = true)
-    void ReservaSetValores(ReservaDto reservaDto, @MappingTarget Reserva reserva);
+    void updateFromDto(ReservaDto reservaDto, @MappingTarget Reserva reserva);
 
 }
+
+q

@@ -8,7 +8,8 @@ import com.ziery.ReservasRestaurante.exception.ViolacaoDeIntegridadeException;
 import com.ziery.ReservasRestaurante.mapper.MesaMapper;
 import com.ziery.ReservasRestaurante.repository.MesaRepository;
 import com.ziery.ReservasRestaurante.repository.ReservaRepository;
-import com.ziery.ReservasRestaurante.utils.VerificadorEntidade;
+import com.ziery.ReservasRestaurante.utils.global.VerificadorEntidade;
+import com.ziery.ReservasRestaurante.utils.mesa.MesaValidador;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,13 +24,14 @@ public class MesaService {
     private final MesaRepository mesaRepository;
     private final ReservaRepository reservaRepository;
     private final MesaMapper mesaMapper;
+    private final MesaValidador mesaValidador;
 
 
 
 
     //salvar mesa
     public MesaRespostaComMensagem salvar(@RequestBody MesaDto mesaDto) {
-        validaNumeroMesa(mesaDto.numero());
+        mesaValidador.validarNumeroMesa(mesaDto.numero(), null);
         Mesa mesa = mesaMapper.toMesa(mesaDto);
         mesaRepository.save(mesa);
         MesaDtoReposta resposta = mesaMapper.toMesaDtoResposta(mesa);
@@ -55,7 +57,7 @@ public class MesaService {
     //Atualizar mesa
     public MesaRespostaComMensagem atualizarMesa(Long id, MesaDto mesaDto) {
         var mesa = VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(id), id, "Mesa" );
-        validaNumeroMesaAtualizacao(mesaDto.numero(), mesa.getId());
+        mesaValidador.validarNumeroMesa(mesaDto.numero(), id);
         mesaMapper.MesaSetValores(mesaDto, mesa);
         mesaRepository.save(mesa);
         MesaDtoReposta mesaReposta = mesaMapper.toMesaDtoResposta(mesa);
@@ -63,19 +65,6 @@ public class MesaService {
 
     }
 
-    //validação de numero de mesa duplicado ao salvar
-    public void validaNumeroMesa(int numero) {
-        if (mesaRepository.existsByNumero(numero)){ //verifica se o número da mesa ja foi cadastrado
-            throw new ViolacaoDeIntegridadeException("O número: " +numero + " inserido já foi cadastrado antes!");
-        }
-    }
-    //validação de numero de mesa duplicado ao atualizar
-    public void validaNumeroMesaAtualizacao(int numero, long idAtual) {
-        Optional<Mesa> mesaExistente = mesaRepository.findByNumero(numero);
-        if (mesaExistente.isPresent() && !mesaExistente.get().getId().equals(idAtual)){ //verifica se o número da mesa ja foi cadastrado
-            throw new ViolacaoDeIntegridadeException("O número: " + numero + " Já está sendo usada por outra mesa!");
-        }
-    }
 
 
 
