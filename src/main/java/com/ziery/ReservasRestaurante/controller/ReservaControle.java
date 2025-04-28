@@ -6,6 +6,7 @@ import com.ziery.ReservasRestaurante.dtos.response.ReservaRepostaComMensagem;
 import com.ziery.ReservasRestaurante.service.ReservaService;
 import jakarta.validation.Valid;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -41,6 +42,18 @@ public class ReservaControle implements ControleGenerico {
     public ResponseEntity<ReservaRepostaComMensagem> atualizarReserva(@PathVariable Long id, @RequestBody @Valid ReservaDto reservaDto) {
         ReservaRepostaComMensagem response = reservaService.atualizarReserva(id, reservaDto);
         return ResponseEntity.ok(response);
+    }
+
+    @GetMapping
+    public ResponseEntity<Page<ReservaDtoResposta>> listarTodos (
+            @RequestParam(value = "quantidade-por-pagina", defaultValue = "10")
+            Integer quantidade,
+            @RequestParam(value = "numero-pagina", defaultValue = "0")
+            Integer numero
+    ){
+        var resultado = reservaService.listarTodos(quantidade, numero);
+        return ResponseEntity.ok(resultado);
+
     }
 
 

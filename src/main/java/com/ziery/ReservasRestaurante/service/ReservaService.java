@@ -13,6 +13,9 @@ import com.ziery.ReservasRestaurante.repository.ReservaRepository;
 import com.ziery.ReservasRestaurante.utils.global.VerificadorEntidade;
 import com.ziery.ReservasRestaurante.utils.reserva.ReservaValidador;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -66,6 +69,14 @@ public class ReservaService  {
         reservaRepository.save(reserva);
         ReservaDtoResposta resposta = reservaMapper.toReservaDtoResposta(reserva);
         return new ReservaRepostaComMensagem("Reserva atualizada com sucesso!", resposta );
+    }
+
+    //lista todas as reservas com paginação
+    public Page<ReservaDtoResposta> listarTodos(Integer quantidade, Integer numero) {
+
+        Pageable pageRequest = PageRequest.of(numero, quantidade );
+        var resultado = reservaRepository.findAll(pageRequest);
+        return resultado.map(reservaMapper::toReservaDtoResposta);
     }
 
 
