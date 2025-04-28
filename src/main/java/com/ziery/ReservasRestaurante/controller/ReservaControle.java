@@ -14,26 +14,26 @@ import java.net.URI;
 @RestController
 @RequestMapping("/reservas")
 @AllArgsConstructor
-public class ReservaController implements GenericController{
+public class ReservaControle implements ControleGenerico {
 
     private final ReservaService reservaService;
 
     @PostMapping
-    public ResponseEntity<ReservaRepostaComMensagem> salvar(@RequestBody @Valid ReservaDto reservaDto) {
-        var resposta = reservaService.salvar(reservaDto);
+    public ResponseEntity<ReservaRepostaComMensagem> salvarReserva(@RequestBody @Valid ReservaDto reservaDto) {
+        var resposta = reservaService.salvarReserva(reservaDto);
         URI location = geraHeaderLocation(resposta.reserva().id());
         return ResponseEntity.created(location).body(resposta);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ReservaDtoResposta> buscarReserva(@PathVariable Long id) {
-        ReservaDtoResposta resposta = reservaService.buscarReservaId(id);
+    public ResponseEntity<ReservaDtoResposta> buscarReservaPorId(@PathVariable Long id) {
+        ReservaDtoResposta resposta = reservaService.buscarReservaPorId(id);
         return ResponseEntity.ok(resposta);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deletarReserva(@PathVariable Long id) {
-        reservaService.deletarReserva(id);
+    public ResponseEntity<Void> removerReservaPorId(@PathVariable Long id) {
+        reservaService.removerReservaPorId(id);
         return ResponseEntity.noContent().build();
     }
 

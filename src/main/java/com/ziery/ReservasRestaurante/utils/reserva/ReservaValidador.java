@@ -14,7 +14,7 @@ import java.util.List;
 
 @Component
 @AllArgsConstructor
-public class ReservaValidacoes {
+public class ReservaValidador {
 
     private final ReservaRepository reservaRepository;
 

@@ -9,35 +9,34 @@ import lombok.AllArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 
 import java.net.URI;
 
 @RestController
 @AllArgsConstructor
 @RequestMapping("/mesas")
-public class MesaController implements GenericController {
+public class MesaControle implements ControleGenerico {
 
-    //Injeção via lombok
+    //Injeção de dependência via lombok
     private final MesaService mesaService;
 
 
     @PostMapping
-    public ResponseEntity<MesaRespostaComMensagem> salvar(@RequestBody @Valid MesaDto mesaDto) {
-        MesaRespostaComMensagem response = mesaService.salvar(mesaDto);
+    public ResponseEntity<MesaRespostaComMensagem> salvarMesa(@RequestBody @Valid MesaDto mesaDto) {
+        MesaRespostaComMensagem response = mesaService.salvarMesa(mesaDto);
         URI uri = geraHeaderLocation(response.mesa().id());
         return ResponseEntity.created(uri).body(response);
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<MesaDtoReposta> buscarPorId(@PathVariable Long id) {
-        MesaDtoReposta mesaDtoReposta = mesaService.buscarPorId(id);
+    public ResponseEntity<MesaDtoReposta> buscarMesaPorId(@PathVariable Long id) {
+        MesaDtoReposta mesaDtoReposta = mesaService.buscarMesaPorId(id);
         return ResponseEntity.status(HttpStatus.OK).body(mesaDtoReposta);
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> excluirMesa(@PathVariable Long id) {
-        mesaService.excluirMesa(id);
+    public ResponseEntity<Void> removerMesaPorId(@PathVariable Long id) {
+        mesaService.removerMesaPorId(id);
         return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
     }
 

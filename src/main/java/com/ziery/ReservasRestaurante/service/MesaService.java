@@ -14,8 +14,6 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
-import java.util.Optional;
-
 @Service
 @AllArgsConstructor
 
@@ -30,7 +28,7 @@ public class MesaService {
 
 
     //salvar mesa
-    public MesaRespostaComMensagem salvar(@RequestBody MesaDto mesaDto) {
+    public MesaRespostaComMensagem salvarMesa(@RequestBody MesaDto mesaDto) {
         mesaValidador.validarNumeroMesa(mesaDto.numero(), null);
         Mesa mesa = mesaMapper.toMesa(mesaDto);
         mesaRepository.save(mesa);
@@ -39,14 +37,14 @@ public class MesaService {
 
     }
     //Exibir mesa por Id
-    public MesaDtoReposta buscarPorId(Long id) {
+    public MesaDtoReposta buscarMesaPorId(Long id) {
         var mesa =  VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(id), id, "Mesa");
         return mesaMapper.toMesaDtoResposta(mesa);
 
     }
 
     //deletar mesa
-    public void excluirMesa(Long id) {
+    public void removerMesaPorId(Long id) {
         var mesa =  VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(id), id, "Mesa");
         if (reservaRepository.existsByMesaId(mesa.getId())) {
             throw new ViolacaoDeIntegridadeException("Mesa com Id " + id + " não pode ser deletada pois está vinculada a uma ou mais reservas");

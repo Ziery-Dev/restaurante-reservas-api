@@ -1,7 +1,6 @@
 package com.ziery.ReservasRestaurante.dtos.response;
 
-import com.ziery.ReservasRestaurante.dtos.request.ClienteDto;
-
+// Classe responsável por encapsular uma resposta com mensagem e dados da entidade.
 public record ClienteRespostaComMensagem(String resposta, ClienteDtoReposta clienteResposta
 ) {
 

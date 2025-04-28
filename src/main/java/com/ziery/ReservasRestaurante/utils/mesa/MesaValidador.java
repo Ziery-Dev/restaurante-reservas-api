@@ -10,6 +10,7 @@ import java.util.Optional;
 
 @Component
 @AllArgsConstructor
+//Contém métodos de validação auxiliares para o mesaService
 public class MesaValidador {
 
     private final MesaRepository mesaRepository;

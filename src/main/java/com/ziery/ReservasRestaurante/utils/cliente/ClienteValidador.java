@@ -8,7 +8,7 @@ import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Component;
 
 import java.util.Optional;
-
+//Contém métodos de validação auxiliares para o clienteService
 @Component
 @AllArgsConstructor
 public class ClienteValidador {

@@ -1,6 +1,6 @@
 package com.ziery.ReservasRestaurante.exception;
 
-//Exceção para quando um recurso não é econtrado no banco (findById(id))
+// Exceção personalizada para recursos não encontrados no banco de dados.
 public class RecursoNaoEncontradoException extends RuntimeException {
     public RecursoNaoEncontradoException(String mensagem) {
         super(mensagem);

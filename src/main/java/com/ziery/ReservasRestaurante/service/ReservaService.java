@@ -6,19 +6,14 @@ import com.ziery.ReservasRestaurante.dtos.response.ReservaRepostaComMensagem;
 import com.ziery.ReservasRestaurante.entites.Cliente;
 import com.ziery.ReservasRestaurante.entites.Mesa;
 import com.ziery.ReservasRestaurante.entites.Reserva;
-import com.ziery.ReservasRestaurante.exception.ViolacaoDeIntegridadeException;
 import com.ziery.ReservasRestaurante.mapper.ReservaMapper;
 import com.ziery.ReservasRestaurante.repository.ClienteRepository;
 import com.ziery.ReservasRestaurante.repository.MesaRepository;
 import com.ziery.ReservasRestaurante.repository.ReservaRepository;
 import com.ziery.ReservasRestaurante.utils.global.VerificadorEntidade;
-import com.ziery.ReservasRestaurante.utils.reserva.ReservaValidacoes;
+import com.ziery.ReservasRestaurante.utils.reserva.ReservaValidador;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
-
-import java.time.Duration;
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @AllArgsConstructor
@@ -28,10 +23,10 @@ public class ReservaService  {
     private final MesaRepository mesaRepository;
     private final ClienteRepository clienteRepository;
     private final ReservaMapper reservaMapper;
-    private final ReservaValidacoes reservaValidacoes;
+    private final ReservaValidador reservaValidacoes;
 
-    //método salvar
-    public ReservaRepostaComMensagem salvar(ReservaDto reservaDto){
+    //Salva nova mesa
+    public ReservaRepostaComMensagem salvarReserva(ReservaDto reservaDto){
         Mesa mesa = VerificadorEntidade.verificarOuLancarException(mesaRepository.findById(reservaDto.idMesa()), reservaDto.idMesa(), "Mesa"); //verifica e existencia da mesa
         Cliente cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(reservaDto.idCliente()), reservaDto.idCliente(), "Cliente"); //verifica a existencia do cliente
         reservaValidacoes.verificarEntidadeJaCadastrada(reservaDto, null, "Mesa");
@@ -46,13 +41,13 @@ public class ReservaService  {
     }
 
     //Exibir reserva por id
-    public ReservaDtoResposta buscarReservaId(Long id){
+    public ReservaDtoResposta buscarReservaPorId(Long id){
         var reserva = VerificadorEntidade.verificarOuLancarException(reservaRepository.findById(id), id, "Reserva");
         return reservaMapper.toReservaDtoResposta(reserva);
     }
 
     //excluir reserva por id
-    public void deletarReserva(Long id){
+    public void removerReservaPorId(Long id){
         var reserva = VerificadorEntidade.verificarOuLancarException(reservaRepository.findById(id), id, "Reserva");
         reservaRepository.delete(reserva);
     }

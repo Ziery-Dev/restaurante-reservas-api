@@ -11,9 +11,12 @@ import com.ziery.ReservasRestaurante.repository.ReservaRepository;
 import com.ziery.ReservasRestaurante.utils.cliente.ClienteValidador;
 import com.ziery.ReservasRestaurante.utils.global.VerificadorEntidade;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @AllArgsConstructor
@@ -25,14 +28,15 @@ public class ClienteService {
     private final ClienteValidador clienteValidador;
 
     //salvar cliente
-    public ClienteRespostaComMensagem salvar(ClienteDto clienteDto) {
-        clienteValidador.verificarEmailETelefone(null, clienteDto.telefone(), clienteDto.email() );
+    public ClienteRespostaComMensagem salvarCliente(ClienteDto clienteDto) {
+        clienteValidador.verificarEmailETelefone(null, clienteDto.telefone(), clienteDto.email());
         Cliente cliente = clienteMapper.toCliente(clienteDto);// mapeia o clienteDto que chegou como entrada para uma classe do tipo cliente, para que possa ser salvo no repositório
         clienteRepository.save(cliente); //salva o cliente no repositorio
-        ClienteDtoReposta clienteReponse = clienteMapper.toClienteDtoResposta(cliente) ;//mapeia o cliente que foi salvo como Dto novamnete para ser mandado como resposta
+        ClienteDtoReposta clienteReponse = clienteMapper.toClienteDtoResposta(cliente);//mapeia o cliente que foi salvo como Dto novamnete para ser mandado como resposta
         return new ClienteRespostaComMensagem("Cliente salvo com sucesso", clienteReponse); //retorna a mensagem de sucesso junto com o dto para ser retornando no controller como resposta
 
     }
+
     //buscar cliente
     public ClienteDtoReposta buscarClientePorId(Long id) {
         var cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(id), id, "Cliente");
@@ -41,8 +45,8 @@ public class ClienteService {
     }
 
     //deletar cliente
-    public void deletarClientePorId(Long id) {
-       var cliente =  VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(id), id, "Cliente");
+    public void removerClientePorId(Long id) {
+        var cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(id), id, "Cliente");
         if (reservaRepository.existsByClienteId(cliente.getId())) {
             throw new ViolacaoDeIntegridadeException("Cliente com Id " + id + " não pode ser deletado pois está vinculada a uma ou mais reservas");
         }
@@ -50,20 +54,24 @@ public class ClienteService {
 
     }
 
-    //Atualizar cliente
-    public ClienteRespostaComMensagem atualizar(ClienteDto clienteDto, Long id) {
+
+    //Atualizar cliente 
+    public ClienteRespostaComMensagem atualizarCliente(ClienteDto clienteDto, Long id) {
         var cliente = VerificadorEntidade.verificarOuLancarException(clienteRepository.findById(id), id, "Cliente");
-        clienteValidador.verificarEmailETelefone(id, clienteDto.telefone(), clienteDto.email() );
+        clienteValidador.verificarEmailETelefone(id, clienteDto.telefone(), clienteDto.email());
         clienteMapper.ClientSetValores(clienteDto, cliente);
         clienteRepository.save(cliente);
         ClienteDtoReposta clienteReponse = clienteMapper.toClienteDtoResposta(cliente);
         return new ClienteRespostaComMensagem("Cliente atualizado com sucesso", clienteReponse);
     }
 
+    public Page<ClienteDtoReposta> listarTodos(Integer pagina, Integer tamanho) {
+        Pageable pageRequest = PageRequest.of(pagina, tamanho);
+
+        var resultadoPagina = clienteRepository.findAll(pageRequest);
+        return resultadoPagina.map(clienteMapper::toClienteDtoResposta);
 
 
 
-
-
-
+    }
 }

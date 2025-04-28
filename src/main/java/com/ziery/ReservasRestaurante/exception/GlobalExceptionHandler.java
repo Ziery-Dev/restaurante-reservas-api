@@ -12,10 +12,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+// Classe responsável por capturar e tratar exceções lançadas em toda a aplicação.
 @RestControllerAdvice
 public class GlobalExceptionHandler {
 
-    //Tratamento especifico para validações (@NotBlank, NotNull,etc), exibindo mensagem de erro e os campos que foram inseridos incorretamente
+    // Trata exceções de validação de dados (@NotBlank, @NotNull, etc.), retornando mensagens detalhadas por campo inválido.
     @ExceptionHandler(MethodArgumentNotValidException.class)
     public ResponseEntity<List<ErroResposta>> tratarErrosDeValidacao(MethodArgumentNotValidException ex) {
         List<ErroResposta> erros = ex.getBindingResult()
@@ -26,7 +27,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.badRequest().body(erros);
     }
 
-    //tratamento para recursos não econtrado o buscar por id
+    // Trata exceção lançada quando um recurso não é encontrado ao buscar por ID.
     @ExceptionHandler(RecursoNaoEncontradoException.class)
     public ResponseEntity<Map<String, String>> tratamentoRecursoNaoEncontrado(RecursoNaoEncontradoException ex) {
         Map<String, String> erro = new HashMap<>();
@@ -34,7 +35,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.NOT_FOUND).body(erro);
     }
 
-    //tratamento alguns  para erros comuns
+    // Trata exceções relacionadas à violação de regras de integridade da aplicação (ex: dados duplicados ou inconsistentes).
     @ExceptionHandler(ViolacaoDeIntegridadeException.class)
     public ResponseEntity<Map<String, String>> tratamentoViolacaoDeIntegridade(ViolacaoDeIntegridadeException ex) {
         Map<String, String> erro = new HashMap<>();
@@ -43,7 +44,7 @@ public class GlobalExceptionHandler {
     }
 
 
-    //Tratamento para campos que não entram nas validações padrão (ex: enum mal formatado, datas erradas, tipos incompatíveis)
+    // Trata erros de leitura da requisição, como campos mal formatados (ex: enums inválidos, datas erradas, tipos incompatíveis).
     @ExceptionHandler(HttpMessageNotReadableException.class)
     public ResponseEntity<Map<String, String>> tratarErroDeLeitura(HttpMessageNotReadableException ex) {
         String mensagemReposta = "Erro ao processar os dados enviados. Verifique se todos os campos estão corretos e bem formatados.";
@@ -54,7 +55,7 @@ public class GlobalExceptionHandler {
         return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(erro);
     }
 
-    //Tratamento para erro inesperado
+    // Trata qualquer exceção não prevista, retornando uma mensagem genérica de erro interno.
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Map<String, String>> tratrErroGenerico(Exception ex) {
         Map<String, String> erro = new HashMap<>();
