@@ -11,6 +11,9 @@ import com.ziery.ReservasRestaurante.repository.ReservaRepository;
 import com.ziery.ReservasRestaurante.utils.global.VerificadorEntidade;
 import com.ziery.ReservasRestaurante.utils.mesa.MesaValidador;
 import lombok.AllArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.web.bind.annotation.RequestBody;
 
@@ -61,6 +64,14 @@ public class MesaService {
         MesaDtoReposta mesaReposta = mesaMapper.toMesaDtoResposta(mesa);
         return new MesaRespostaComMensagem("Mesa atualizada com sucesso ", mesaReposta);
 
+    }
+
+    //lista todos os itens da tabela
+    public Page<MesaDtoReposta> listarTodos(Integer quantidade, Integer numero){
+
+        Pageable pageRequest = PageRequest.of(numero, quantidade);
+        var resultado = mesaRepository.findAll(pageRequest);
+        return resultado.map(mesaMapper::toMesaDtoResposta);
     }
 
 

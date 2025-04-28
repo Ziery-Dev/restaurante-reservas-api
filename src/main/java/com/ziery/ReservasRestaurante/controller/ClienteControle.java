@@ -50,12 +50,12 @@ public class ClienteControle implements ControleGenerico {
 
     @GetMapping
     public ResponseEntity<Page<ClienteDtoReposta>> listarClientes(
-            @RequestParam(value = "tamanho-pagina", defaultValue = "10")
-            Integer tamanho,
-             @RequestParam(value = "pagina", defaultValue = "0")
-             Integer pagina) {
+            @RequestParam(value = "quantidade-por-pagina", defaultValue = "10")
+            Integer quantidade,
+             @RequestParam(value = "numero-pagina", defaultValue = "0")
+             Integer numero) {
 
-        var result =  clienteService.listarTodos(pagina, tamanho);
+        var result =  clienteService.listarTodos(numero, quantidade);
         return ResponseEntity.status(HttpStatus.OK).body(result);
 
 
